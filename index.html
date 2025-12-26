@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Handballtrainer-Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-900 flex items-center justify-center">
+  <div class="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md">
+    <h1 class="text-3xl font-bold text-white mb-6 text-center">Handballtrainer Login</h1>
+
+    <form id="loginForm" class="space-y-5">
+
+      <div>
+        <label for="email" class="block text-gray-300 mb-1">Mannschaft</label>
+        <input id="email" type="text" required placeholder="z. B. wD1" class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-500 outline-none" />
+      </div>
+      <div>
+        <label for="password" class="block text-gray-300 mb-1">Passwort</label>
+        <input id="password" type="password" required class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-500 outline-none" />
+      </div>
+
+      <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-black font-semibold py-2 rounded-md transition">Einloggen</button>
+    </form>
+  </div>
+  
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  // 🔧 Deine Firebase-Konfiguration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAiZOs0weENkQVNSrq9DyT7BmFOLiPTMaQ",
+    authDomain: "handballtrainer-b4daf.firebaseapp.com",
+    projectId: "handballtrainer-b4daf",
+    storageBucket: "handballtrainer-b4daf.firebasestorage.app",
+    messagingSenderId: "401098326689",
+    appId: "1:401098326689:web:0933786351b3ee4e30e6e0"
+  };
+
+  // 🔥 Firebase initialisieren
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 🔐 Login-Formular
+  const form = document.getElementById("loginForm");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const teamName = document.getElementById("email").value.trim(); // dein Mannschaftsfeld
+    const password = document.getElementById("password").value.trim();
+
+    // Firestore-Abfrage: Team mit passendem Namen suchen
+    const teamsRef = collection(db, "teams");
+    const q = query(teamsRef, where("name", "==", teamName));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      alert("❌ Mannschaft nicht gefunden!");
+      return;
+    }
+
+    let valid = false;
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.password === password) {
+        valid = true;
+      }
+    });
+
+    if (valid) {
+      // Mannschaftsnamen lokal speichern
+      localStorage.setItem("teamName", teamName);
+      window.location.href = "home.html"; // Weiterleitung zur Notiz-Seite
+    } else {
+      alert("❌ Falsches Passwort!");
+    }
+  });
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Übungen – Handballtrainer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-8">
+    <!-- Home-Button -->
+<button
+  onclick="window.location.href='home.html'"
+  class="absolute top-6 left-6 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition"
+>
+  ⬅️ <span>Zurück</span>
+</button>
+
+  <h1 class="text-3xl font-bold mb-6">Übungssammlung</h1>
+
+  <!-- Filterzeile -->
+  <div id="filter-bar" class="flex flex-wrap items-center justify-center gap-4 mb-6 w-full max-w-5xl">
+    <div>
+      <label for="filter-category" class="block text-sm text-gray-300 mb-1">Kategorie</label>
+      <select id="filter-category" class="text-black p-2 rounded w-40">
+        <option value="alle">Alle</option>
+        <option value="Angriff">Angriff</option>
+        <option value="Abwehr">Abwehr</option>
+        <option value="Wurf">Wurf</option>
+        <option value="Erwärmung">Erwärmung</option>
+        <option value="Athletik">Athletik</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="filter-intensity" class="block text-sm text-gray-300 mb-1">Intensität</label>
+      <select id="filter-intensity" class="text-black p-2 rounded w-40">
+        <option value="alle">Alle</option>
+        <option value="Leicht">Leicht</option>
+        <option value="Mittel">Mittel</option>
+        <option value="Hoch">Hoch</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Button -->
+  <button id="add-exercise"
+    class="bg-green-500 hover:bg-green-400 text-black font-bold px-5 py-2 rounded mb-6">
+    + Übung hinzufügen
+  </button>
+
+  <!-- Container für Übungen -->
+  <div id="exercise-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl"></div>
+
+  <!-- Popup: Neue Übung -->
+  <div id="exercise-popup" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-xl w-96 max-w-[90%] overflow-y-auto max-h-[90vh]">
+      <h2 class="text-xl font-bold mb-4">Neue Übung hinzufügen</h2>
+
+      <label class="block mb-2">Titel:</label>
+      <input id="ex-title" type="text" class="w-full text-black p-2 rounded mb-3" placeholder="z. B. Passübung 3 gegen 3">
+
+      <label class="block mb-2">Beschreibung / Ablauf:</label>
+      <textarea id="ex-desc" class="w-full text-black p-2 rounded mb-3 h-24"
+        placeholder="Kurze Beschreibung der Übung"></textarea>
+
+      <label class="block mb-2">Kategorie:</label>
+      <select id="ex-category" class="w-full text-black p-2 rounded mb-3">
+        <option>Angriff</option>
+        <option>Abwehr</option>
+        <option>Wurf</option>
+        <option>Erwärmung</option>
+        <option>Athletik</option>
+      </select>
+
+      <label class="block mb-2">Dauer (Minuten):</label>
+      <input id="ex-duration" type="number" class="w-full text-black p-2 rounded mb-3" placeholder="z. B. 10">
+
+      <label class="block mb-2">Materialien:</label>
+      <input id="ex-material" type="text" class="w-full text-black p-2 rounded mb-3"
+        placeholder="z. B. Bälle, Hütchen, Leibchen">
+
+      <label class="block mb-2">Alter:</label>
+      <input id="ex-age" type="text" class="w-full text-black p-2 rounded mb-3"
+        placeholder="z. B. D-Jugend oder 10–12 Jahre">
+
+      <label class="block mb-2">Intensität:</label>
+      <select id="ex-intensity" class="w-full text-black p-2 rounded mb-3">
+        <option>Leicht</option>
+        <option>Mittel</option>
+        <option>Hoch</option>
+      </select>
+
+      <label class="block mb-2">Link (optional, z. B. Instagram / YouTube):</label>
+      <input id="ex-link" type="url" class="w-full text-black p-2 rounded mb-3" placeholder="https://..." />
+
+      <div class="flex justify-between mt-4">
+        <button id="save-exercise" class="bg-green-500 px-4 py-2 rounded font-bold text-black">Speichern</button>
+        <button id="close-popup" class="bg-gray-600 px-4 py-2 rounded font-bold">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup: Übung bearbeiten -->
+  <div id="edit-popup" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-xl w-96 max-w-[90%] overflow-y-auto max-h-[90vh]">
+      <h2 class="text-xl font-bold mb-4">Übung bearbeiten</h2>
+
+      <label class="block mb-2">Titel:</label>
+      <input id="edit-title" type="text" class="w-full text-black p-2 rounded mb-3">
+
+      <label class="block mb-2">Beschreibung:</label>
+      <textarea id="edit-desc" class="w-full text-black p-2 rounded mb-3 h-24"></textarea>
+
+      <label class="block mb-2">Kategorie:</label>
+      <select id="edit-category" class="w-full text-black p-2 rounded mb-3">
+        <option>Angriff</option>
+        <option>Abwehr</option>
+        <option>Wurf</option>
+        <option>Erwärmung</option>
+        <option>Athletik</option>
+      </select>
+
+      <label class="block mb-2">Dauer (Minuten):</label>
+      <input id="edit-duration" type="number" class="w-full text-black p-2 rounded mb-3">
+
+      <label class="block mb-2">Materialien:</label>
+      <input id="edit-material" type="text" class="w-full text-black p-2 rounded mb-3">
+
+      <label class="block mb-2">Alter:</label>
+      <input id="edit-age" type="text" class="w-full text-black p-2 rounded mb-3">
+
+      <label class="block mb-2">Intensität:</label>
+      <select id="edit-intensity" class="w-full text-black p-2 rounded mb-3">
+        <option>Leicht</option>
+        <option>Mittel</option>
+        <option>Hoch</option>
+      </select>
+
+      <label class="block mb-2">Link (optional):</label>
+      <input id="edit-link" type="url" class="w-full text-black p-2 rounded mb-3" placeholder="https://..." />
+
+      <div class="flex justify-between items-center mt-4">
+        <button id="delete-exercise" class="bg-red-600 px-3 py-2 rounded font-bold text-white hover:bg-red-700">Löschen</button>
+        <div class="flex gap-2">
+          <button id="close-edit" class="bg-gray-600 px-4 py-2 rounded font-bold">Abbrechen</button>
+          <button id="save-edit" class="bg-green-500 px-4 py-2 rounded font-bold text-black">Speichern</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup: Übung ansehen -->
+  <div id="detail-popup" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-xl w-[500px] max-w-[90%] max-h-[90vh] overflow-y-auto">
+      <h2 id="detail-title" class="text-2xl font-bold mb-2"></h2>
+      <p id="detail-category" class="text-gray-400 text-sm mb-2"></p>
+      <p id="detail-duration" class="text-gray-400 text-sm mb-2"></p>
+      <p id="detail-intensity" class="text-gray-400 text-sm mb-4"></p>
+
+      <div id="detail-desc" 
+        class="text-gray-200 mb-4 whitespace-pre-line break-words max-h-48 overflow-y-auto p-2 bg-gray-900/30 rounded-md">
+      </div>
+
+      <p class="text-sm text-gray-300 mb-1"><b>Material:</b> <span id="detail-material"></span></p>
+      <p class="text-sm text-gray-300 mb-3"><b>Alter:</b> <span id="detail-age"></span></p>
+
+      <a id="detail-link" target="_blank" 
+         class="hidden bg-blue-500 hover:bg-blue-400 text-black px-3 py-2 rounded font-bold mt-3 inline-block">
+        Externe Quelle öffnen
+      </a>
+
+      <div class="flex justify-end gap-3 mt-5">
+        <button id="close-detail" class="bg-gray-600 px-4 py-2 rounded font-bold">Schließen</button>
+        <button id="edit-from-detail" class="bg-green-500 px-4 py-2 rounded font-bold text-black">Bearbeiten</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="uebungen.js"></script>
+</body>
+</html>

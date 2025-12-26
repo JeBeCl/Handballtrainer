@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spieler – Handballtrainer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-8">
+
+  <h1 class="text-3xl font-bold mb-6">Spielerübersicht</h1>
+
+  <!-- Zurück -->
+  <button onclick="window.location.href='home.html'"
+    class="fixed top-5 left-5 bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-lg text-sm font-semibold">
+    ← Zurück
+  </button>
+
+  <!-- Button -->
+  <button id="add-player"
+    class="bg-green-500 hover:bg-green-400 text-black font-bold px-5 py-2 rounded mb-6">
+    + Spieler hinzufügen
+  </button>
+
+  <!-- Container -->
+  <div id="player-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl"></div>
+
+  <!-- Popup -->
+  <div id="player-popup" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-xl w-[400px] max-w-[90%] overflow-y-auto max-h-[90vh]">
+      <h2 id="popup-title" class="text-xl font-bold mb-4">Neuer Spieler</h2>
+
+      <label class="block mb-2">Name:</label>
+      <input id="pl-name" type="text" class="w-full text-black p-2 rounded mb-3" placeholder="z. B. Rikke Hansen">
+
+      <label class="block mb-2">Rückennummer:</label>
+      <input id="pl-number" type="number" class="w-full text-black p-2 rounded mb-3" placeholder="z. B. 12">
+
+      <label class="block mb-2">Position:</label>
+      <input id="pl-position" type="text" class="w-full text-black p-2 rounded mb-3" placeholder="z. B. Rückraum Mitte">
+
+      <label class="block mb-2">Geburtsdatum:</label>
+      <input id="pl-birth" type="text" class="w-full text-black p-2 rounded mb-3" placeholder="TT.MM.JJJJ">
+
+      <label class="block mb-2">Passnummer:</label>
+      <input id="pl-pass" type="text" class="w-full text-black p-2 rounded mb-3" placeholder="z. B. OKT-12345">
+
+      <label class="block mb-2">Telefonnummer (optional):</label>
+      <input id="pl-phone" type="text" class="w-full text-black p-2 rounded mb-3" placeholder="z. B. 0157 1234567">
+
+      <label class="block mb-2">Notizen:</label>
+      <textarea id="pl-notes" class="w-full text-black p-2 rounded mb-3 h-20" placeholder="z. B. sehr motiviert, gute Abwehr"></textarea>
+
+      <div class="flex justify-between mt-4">
+        <button id="save-player" class="bg-green-500 px-4 py-2 rounded font-bold text-black">Speichern</button>
+        <button id="close-popup" class="bg-gray-600 px-4 py-2 rounded font-bold">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="spieler.js"></script>
+</body>
+</html>

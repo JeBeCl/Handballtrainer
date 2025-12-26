@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kalender – Handballtrainer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+
+  #calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+  }
+
+  #calendar > div {
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center; /* verhindert Stretching */
+    border-radius: 10px;
+    background-color: #1f2937;
+    padding: 12px;
+    transition: background-color 0.2s;
+  }
+
+  #calendar > div:hover {
+    background-color: #374151;
+  }
+
+  /* optional schönerer Glow für aktuellen Tag */
+  .today {
+    outline: 3px solid #22c55e;
+    outline-offset: 2px;
+  }
+</style>
+
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-8">
+  <h1 class="text-3xl font-bold mb-6">📅 Trainingskalender</h1>
+
+  <!-- Zurück-Button -->
+<button
+  onclick="window.location.href='home.html'"
+  class="absolute top-6 left-6 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition"
+>
+  ⬅️ <span>Zurück</span>
+</button>
+
+  <!-- Monatsnavigation -->
+  <div class="flex items-center justify-between w-full max-w-5xl mb-4">
+    <button id="prevMonth" class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600">⬅️</button>
+    <h2 id="monthTitle" class="text-xl font-bold"></h2>
+    <button id="nextMonth" class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600">➡️</button>
+  </div>
+
+  <!-- Kalendercontainer -->
+  <div id="calendar" class="grid grid-cols-7 gap-3 w-full max-w-5xl"></div>
+
+<!-- Popup fürs Hinzufügen -->
+<div id="popup" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-gray-800 p-6 rounded-xl shadow-xl w-[90%] max-w-md">
+    <h2 class="text-xl mb-4 font-bold" id="popup-date"></h2>
+
+    <label class="block mb-2">Typ:</label>
+    <select id="event-type" class="w-full text-black p-2 rounded mb-3">
+      <option value="Training">Training</option>
+      <option value="Spiel">Spiel</option>
+    </select>
+
+    <div id="team-select" class="hidden mb-3">
+      <label class="block mb-2">Mannschaft:</label>
+      <input id="event-team" type="text" class="w-full text-black p-2 rounded" placeholder="z. B. D1 oder D2">
+    </div>
+
+    <label class="block mb-2">Ort:</label>
+    <input id="event-location" type="text" class="w-full text-black p-2 rounded mb-3" placeholder="z. B. Owschlag…">
+
+    <label class="block mb-2">Uhrzeit:</label>
+    <input id="event-time" type="time" class="w-full text-black p-2 rounded mb-3">
+
+    <label class="block mb-2">Farbe:</label>
+<div class="flex gap-2 mb-4">
+  <div class="color-choice w-8 h-8 rounded cursor-pointer bg-[#22c55e] ring-2 ring-transparent" data-color="#22c55e"></div>
+  <div class="color-choice w-8 h-8 rounded cursor-pointer bg-[#60a5fa]" data-color="#60a5fa"></div>
+  <div class="color-choice w-8 h-8 rounded cursor-pointer bg-[#facc15]" data-color="#facc15"></div>
+  <div class="color-choice w-8 h-8 rounded cursor-pointer bg-[#ef4444]" data-color="#ef4444"></div>
+  <div class="color-choice w-8 h-8 rounded cursor-pointer bg-[#a855f7]" data-color="#a855f7"></div>
+</div>
+
+
+
+    <div class="flex justify-between mt-4">
+      <button id="save-event" class="bg-green-500 px-4 py-2 rounded font-bold text-black">Speichern</button>
+      <button id="close-popup" class="bg-gray-600 px-4 py-2 rounded font-bold">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Detail-Popup: Trainer Anwesenheit -->
+  <div id="detail-popup" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-xl w-96 max-w-[90%]">
+      <h2 class="text-xl mb-3 font-bold" id="detail-date">Training / Spiel</h2>
+
+      <div id="trainer-list" class="space-y-3 mb-4">
+        <!-- Checkliste wird hier durch JS eingefügt -->
+      </div>
+
+      <div class="flex gap-3 justify-end">
+        <button id="close-detail" class="bg-gray-600 px-4 py-2 rounded font-bold">Schließen</button>
+        <button id="save-detail" class="bg-green-500 px-4 py-2 rounded font-bold text-black">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Popup: Termin bearbeiten -->
+<div id="edit-popup" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-gray-800 p-6 rounded-xl shadow-xl w-80">
+    <h2 class="text-xl mb-4 font-bold text-center text-white flex items-center justify-center gap-2">
+      ✏️ Termin bearbeiten
+    </h2>
+
+    <!-- Ort -->
+    <label class="block mb-2 text-sm text-gray-300">Ort:</label>
+    <input
+      id="edit-location"
+      type="text"
+      class="w-full text-black p-2 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-green-400"
+      placeholder="z. B. Owschlag Halle 1"
+    >
+
+    <!-- Uhrzeit -->
+    <label class="block mb-2 text-sm text-gray-300">Uhrzeit:</label>
+    <input
+      id="edit-time"
+      type="time"
+      class="w-full text-black p-2 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-green-400"
+    >
+
+    <!-- Mannschaft (nur bei Spiel) -->
+    <div id="edit-team-field" class="hidden mb-3">
+      <label class="block mb-2 text-sm text-gray-300">Mannschaft (z. B. D1 oder D2):</label>
+      <input
+        id="edit-team"
+        type="text"
+        class="w-full text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+        placeholder="z. B. D1"
+      >
+    </div>
+
+    <!-- Farbe -->
+    <label class="block mb-2">Farbe:</label>
+<div class="flex gap-2 mb-4">
+  <div class="color-choice w-8 h-8 rounded cursor-pointer bg-[#22c55e] ring-2 ring-transparent" data-color="#22c55e"></div>
+  <div class="color-choice w-8 h-8 rounded cursor-pointer bg-[#60a5fa]" data-color="#60a5fa"></div>
+  <div class="color-choice w-8 h-8 rounded cursor-pointer bg-[#facc15]" data-color="#facc15"></div>
+  <div class="color-choice w-8 h-8 rounded cursor-pointer bg-[#ef4444]" data-color="#ef4444"></div>
+  <div class="color-choice w-8 h-8 rounded cursor-pointer bg-[#a855f7]" data-color="#a855f7"></div>
+</div>
+
+
+
+    <!-- Button-Leiste -->
+    <div class="flex justify-center items-center gap-3">
+      <button
+        id="delete-event"
+        class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-semibold text-white flex items-center gap-1 transition transform hover:scale-[1.03]"
+      >
+        Löschen
+      </button>
+
+      <button
+        id="close-edit"
+        class="bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded-lg font-semibold text-white transition"
+      >
+        X
+      </button>
+
+      <button
+        id="save-edit"
+        class="bg-green-500 hover:bg-green-400 px-4 py-2 rounded-lg font-semibold text-black transition"
+      >
+        Speichern
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+  <script type="module" src="kalender.js"></script>
+</body>
+</html>

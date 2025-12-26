@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Taktik & Spielfeld – Handballtrainer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .court { position:relative; background:#0f6d3f; border-radius:12px;
+      box-shadow:0 0 0 4px #0b5a35 inset; overflow:hidden; }
+    #bgCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* bleibt so – Hintergrund reagiert nicht */
+}
+#drawCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto; /* <- WICHTIG, damit du zeichnen kannst */
+}
+
+#drawCanvas.drawing {
+  cursor: crosshair;
+}
+    .token{position:absolute;width:44px;height:44px;border-radius:9999px;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:800;color:#111827;user-select:none;
+      box-shadow:0 4px 10px rgba(0,0,0,.25);cursor:grab;transform:translate(-50%,-50%);}
+    .token.red{background:#ef4444;}
+    .token.blue{background:#60a5fa;}
+    .token.gk{background:#f59e0b;}
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-6">
+
+  <button onclick="window.location.href='home.html'"
+    class="fixed top-5 left-5 bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-lg text-sm font-semibold">
+    ← Zurück
+  </button>
+
+  <h1 class="text-3xl font-bold mb-4">📋 Taktik & Spielfeld</h1>
+
+  <div class="flex flex-wrap gap-3 items-center justify-center mb-4">
+    <button id="addRed"  class="bg-red-500 hover:bg-red-400 text-black font-semibold px-3 py-2 rounded">+ Rot</button>
+    <button id="addBlue" class="bg-blue-400 hover:bg-blue-300 text-black font-semibold px-3 py-2 rounded">+ Blau</button>
+    <button id="addGK"   class="bg-amber-400 hover:bg-amber-300 text-black font-semibold px-3 py-2 rounded">+ TW</button>
+
+    <label class="flex items-center gap-2 bg-gray-800/60 px-3 py-2 rounded">
+      <input id="drawToggle" type="checkbox" class="accent-green-400"><span>Zeichnen</span>
+    </label>
+    <select id="drawColor" class="text-black rounded px-2 py-1">
+      <option value="#ffffff">Weiß</option>
+      <option value="#ef4444">Rot</option>
+      <option value="#60a5fa">Blau</option>
+      <option value="#22c55e">Grün</option>
+      <option value="#f59e0b">Orange</option>
+    </select>
+    <button id="undo"      class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-sm">↶ Rückgängig</button>
+    <button id="clearDraw" class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-sm">🧹 Löschen</button>
+
+    <label class="flex items-center gap-2 bg-gray-800/60 px-3 py-2 rounded">
+      <input id="deleteMode" type="checkbox" class="accent-red-400"><span>Löschmodus</span>
+    </label>
+
+    <button id="savePng" class="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-3 py-2 rounded">
+      💾 Speichern
+    </button>
+  </div>
+
+  <div id="boardWrap" class="court w-[min(95vw,1000px)] aspect-[2/1] relative select-none">
+    <canvas id="bgCanvas"></canvas>
+    <canvas id="drawCanvas"></canvas>
+  </div>
+
+  <h2 class="text-2xl font-semibold mt-8 mb-2">💡 Gespeicherte Taktiken</h2>
+  <div id="tacticList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl"></div>
+
+  <script type="module" src="board.js"></script>
+</body>
+</html>

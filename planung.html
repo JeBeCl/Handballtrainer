@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trainingsplanung – Handballtrainer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jsPDF für PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-8">
+  <h1 class="text-3xl font-bold mb-6">🗓️ Trainingsplanung</h1>
+
+  <!-- Button -->
+  <button id="add-plan"
+    class="bg-green-500 hover:bg-green-400 text-black font-bold px-5 py-2 rounded mb-6">
+    + Trainingseinheit planen
+  </button>
+
+  <!-- Container -->
+  <div id="plan-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl"></div>
+
+  <!-- Popup: Neue Trainingseinheit -->
+  <div id="plan-popup" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-xl w-[500px] max-w-[90%] max-h-[90vh] overflow-y-auto">
+      <h2 class="text-xl font-bold mb-4">Trainingseinheit</h2>
+
+      <label class="block mb-2">Titel:</label>
+      <input id="plan-title" type="text" class="w-full text-black p-2 rounded mb-3" placeholder="z. B. Tempospiel D-Jugend">
+
+      <label class="block mb-2">Datum:</label>
+      <input id="plan-date" type="date" class="w-full text-black p-2 rounded mb-3">
+
+      <label class="block mb-2">Gesamtdauer (Minuten):</label>
+      <input id="plan-duration" type="number" class="w-full text-black p-2 rounded mb-3" placeholder="z. B. 90">
+
+      <label class="block mb-2">Notizen:</label>
+      <textarea id="plan-notes" class="w-full text-black p-2 rounded mb-3 h-20" placeholder="z. B. Fokus auf schnelle Mitte und Kommunikation"></textarea>
+
+      <label class="block mb-2">Übungen auswählen:</label>
+      <div id="exercise-select" class="bg-gray-700 p-3 rounded max-h-64 overflow-y-auto mb-4"></div>
+
+      <div class="flex justify-between mt-4">
+        <button id="save-plan" class="bg-green-500 px-4 py-2 rounded font-bold text-black">Speichern</button>
+        <button id="close-popup" class="bg-gray-600 px-4 py-2 rounded font-bold">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back Button -->
+  <button onclick="window.location.href='home.html'"
+    class="fixed top-5 left-5 bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-lg text-sm font-semibold">
+    ← Zurück
+  </button>
+
+  <script type="module" src="planung.js"></script>
+</body>
+</html>

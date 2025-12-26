@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Startseite – Handballtrainer</title>
+  <link rel="stylesheet" href="homestyle.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-6 overflow-x-hidden"></body>
+</head>
+<body>
+  <!-- Logout-Button -->
+<header>
+  <h1 id="teamName" class="text-2xl font-bold"></h1>
+  <button id="logout-btn"
+  class="fixed top-5 right-5 bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-lg text-sm font-semibold text-white">
+  🚪 Logout
+</button>
+</header>
+
+
+
+  <main>
+  <div id="kalender" data-title="📅 Kalender" onclick="goto('kalender.html')">
+    <img src="Bilder/kalender.jpg" alt="">
+  </div>
+
+  <div id="ubungen" data-title="🏋️ Übungen" onclick="goto('uebungen.html')">
+    <img src="Bilder/ubungen.jpg" alt="">
+  </div>
+
+  <div id="notizen" data-title="📝 Notizen" onclick="goto('notizen.html')">
+    <img src="Bilder/notizen.jpg" alt="">
+  </div>
+
+  <div id="planung" data-title="📋 Planung" onclick="goto('planung.html')">
+    <img src="Bilder/planung.jpg" alt="">
+  </div>
+
+  <div id="Spieler" data-title="👤 Spieler" onclick="goto('spieler.html')">
+    <img src="Bilder/player.jpg" alt="">
+  </div>
+  <div id="board" data-title="🎯 Taktik & Spielfeld" onclick="goto('board.html')">
+    <img src="Bilder/board.jpg" alt="">
+  </div>
+</main>
+
+
+  <script type="module">
+    // Mannschaftsnamen aus Login holen
+    const teamName = localStorage.getItem("teamName");
+    document.getElementById("teamName").textContent = "Mannschaft: " + teamName;
+
+    window.goto = function(page) {
+    window.location.href = page;
+  }
+
+  document.getElementById("logout-btn").addEventListener("click", () => {
+  // Mannschaft aus LocalStorage entfernen
+  localStorage.removeItem("teamName");
+
+  // Optional: komplette Firebase-Session löschen (wenn du später Auth nutzt)
+  // await signOut(auth);
+
+  // Zurück zur Login-Seite
+  window.location.href = "index.html"; // oder dein Login-Dateiname
+});
+
+  </script>
+</body>
+</html>
